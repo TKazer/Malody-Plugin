@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+/.vs/Malody-Plugin/v17
+/Malody-Plugin/Debug/Malody-Plugin.tlog
+/Malody-Plugin/Debug
+/Malody-Plugin/x64/Debug
+*.ini
+/x64/Debug

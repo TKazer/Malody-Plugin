@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Malody-Reader">
+      <UniqueIdentifier>{f0811244-21a1-406c-81ae-0f0f0824664e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OS-ImGui">
+      <UniqueIdentifier>{2e204cc9-1a25-4809-8161-dc2bca50a14d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OS-ImGui\imgui">
+      <UniqueIdentifier>{232ea7c9-47eb-46d9-8cd3-7f3c8931f189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{1869af9e-81a1-4220-ad9d-4bdd4205e94f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entrance">
+      <UniqueIdentifier>{a4f7432e-b84a-4b0c-9d3e-9e1020c0d200}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MalodyReader\Malody_Algorithm.hpp">
+      <Filter>Malody-Reader</Filter>
+    </ClInclude>
+    <ClInclude Include="MalodyReader\MalodyReader.hpp">
+      <Filter>Malody-Reader</Filter>
+    </ClInclude>
+    <ClInclude Include="MalodyReader\Process.hpp">
+      <Filter>Malody-Reader</Filter>
+    </ClInclude>
+    <ClInclude Include="MalodyReader\Read_Base.hpp">
+      <Filter>Malody-Reader</Filter>
+    </ClInclude>
+    <ClInclude Include="MalodyReader\Read_DataInGame.hpp">
+      <Filter>Malody-Reader</Filter>
+    </ClInclude>
+    <ClInclude Include="MalodyReader\Read_DataInResult.hpp">
+      <Filter>Malody-Reader</Filter>
+    </ClInclude>
+    <ClInclude Include="MalodyReader\Read_Game.hpp">
+      <Filter>Malody-Reader</Filter>
+    </ClInclude>
+    <ClInclude Include="MalodyReader\Read_LocalPlayer.hpp">
+      <Filter>Malody-Reader</Filter>
+    </ClInclude>
+    <ClInclude Include="MalodyReader\Read_Map.hpp">
+      <Filter>Malody-Reader</Filter>
+    </ClInclude>
+    <ClInclude Include="MalodyReader\Read_MpResultData.h">
+      <Filter>Malody-Reader</Filter>
+    </ClInclude>
+    <ClInclude Include="MalodyReader\Struct.hpp">
+      <Filter>Malody-Reader</Filter>
+    </ClInclude>
+    <ClInclude Include="OSImGui\OS-ImGui.h">
+      <Filter>OS-ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="OSImGui\OS-ImGui_Struct.h">
+      <Filter>OS-ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="OSImGui\imgui\imconfig.h">
+      <Filter>OS-ImGui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="OSImGui\imgui\imgui.h">
+      <Filter>OS-ImGui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="OSImGui\imgui\imgui_impl_dx11.h">
+      <Filter>OS-ImGui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="OSImGui\imgui\imgui_impl_win32.h">
+      <Filter>OS-ImGui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="OSImGui\imgui\imgui_internal.h">
+      <Filter>OS-ImGui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="OSImGui\imgui\imstb_rectpack.h">
+      <Filter>OS-ImGui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="OSImGui\imgui\imstb_textedit.h">
+      <Filter>OS-ImGui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="OSImGui\imgui\imstb_truetype.h">
+      <Filter>OS-ImGui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PluginApp.hpp">
+      <Filter>Entrance</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="OSImGui\OS-ImGui.cpp">
+      <Filter>OS-ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="OSImGui\imgui\imgui.cpp">
+      <Filter>OS-ImGui\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="OSImGui\imgui\imgui_demo.cpp">
+      <Filter>OS-ImGui\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="OSImGui\imgui\imgui_draw.cpp">
+      <Filter>OS-ImGui\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="OSImGui\imgui\imgui_impl_dx11.cpp">
+      <Filter>OS-ImGui\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="OSImGui\imgui\imgui_impl_win32.cpp">
+      <Filter>OS-ImGui\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="OSImGui\imgui\imgui_tables.cpp">
+      <Filter>OS-ImGui\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="OSImGui\imgui\imgui_widgets.cpp">
+      <Filter>OS-ImGui\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Entrance</Filter>
+    </ClCompile>
+    <ClCompile Include="Malody_Algorithm.cpp">
+      <Filter>Malody-Reader</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
