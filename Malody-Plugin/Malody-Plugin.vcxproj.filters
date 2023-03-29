@@ -85,7 +85,7 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="PluginApp.hpp">
-      <Filter>Entrance</Filter>
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -116,7 +116,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Entrance</Filter>
     </ClCompile>
-    <ClCompile Include="Malody_Algorithm.cpp">
+    <ClCompile Include="MalodyReader\Malody_Algorithm.cpp">
       <Filter>Malody-Reader</Filter>
     </ClCompile>
   </ItemGroup>

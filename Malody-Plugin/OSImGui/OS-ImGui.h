@@ -4,7 +4,6 @@
 #include <functional>
 #include <codecvt>
 #include <vector>
-
 /****************************************************
 * Copyright (C)	: Liv
 * @file			: OS-ImGui.h
@@ -84,12 +83,12 @@ namespace OSImGui
 	{
 	public:
 		// 文本
-		void Text(std::string Text, Vec2 Pos, ImColor Color);
+		void Text(std::string Text, Vec2 Pos, ImColor Color, float FontSize = 15, bool KeepCenter = false);
 		// 描边文本
-		void StrokeText(std::string Text, Vec2 Pos, ImColor Color);
+		void StrokeText(std::string Text, Vec2 Pos, ImColor Color, float FontSize = 15, bool KeepCenter = false);
 		// 矩形
 		void Rectangle(Vec2 Pos, Vec2 Size, ImColor Color, float Thickness, float Rounding = 0);
-		void RectangleFilled(Vec2 Pos, Vec2 Size, ImColor Color, float Rounding = 0);
+		void RectangleFilled(Vec2 Pos, Vec2 Size, ImColor Color, float Rounding = 0, float Nums = 15);
 		// 线
 		void Line(Vec2 From, Vec2 To, ImColor Color, float Thickness);
 		// 圆形

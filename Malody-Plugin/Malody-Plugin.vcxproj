@@ -156,7 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Malody_Algorithm.cpp" />
+    <ClCompile Include="MalodyReader\Malody_Algorithm.cpp" />
     <ClCompile Include="OSImGui\imgui\imgui.cpp" />
     <ClCompile Include="OSImGui\imgui\imgui_demo.cpp" />
     <ClCompile Include="OSImGui\imgui\imgui_draw.cpp" />
