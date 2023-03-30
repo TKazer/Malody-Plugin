@@ -130,6 +130,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="KeyboardManager\KeyBoard_Memory.hpp" />
+    <ClInclude Include="KeyboardManager\KeyBoard_Base.hpp" />
+    <ClInclude Include="KeyboardManager\Kps.hpp" />
+    <ClInclude Include="OSImGui\OS-ImGui.h" />
     <ClInclude Include="PluginApp.hpp" />
     <ClInclude Include="MalodyReader\MalodyReader.hpp" />
     <ClInclude Include="MalodyReader\Malody_Algorithm.hpp" />
@@ -150,7 +154,6 @@
     <ClInclude Include="OSImGui\imgui\imstb_rectpack.h" />
     <ClInclude Include="OSImGui\imgui\imstb_textedit.h" />
     <ClInclude Include="OSImGui\imgui\imstb_truetype.h" />
-    <ClInclude Include="OSImGui\OS-ImGui.h" />
     <ClInclude Include="OSImGui\OS-ImGui_Struct.h" />
     <ClInclude Include="Singleton.hpp" />
   </ItemGroup>

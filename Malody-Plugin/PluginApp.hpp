@@ -1,6 +1,7 @@
 #pragma once
 #include "OSImGui/OS-ImGui.h"
 #include "MalodyReader/MalodyReader.hpp"
+#include "KeyboardManager/Kps.hpp"
 #include <iostream>
 #include <Windows.h>
 #include <deque>
@@ -81,7 +82,8 @@ private:
 	{
 		Malody::GameStatus GameStatus;
 		Malody::MapData MapData;
-
+		static KpsApp KpsManager;
+		
 		if (GetAsyncKeyState(VK_END))
 		{
 			OSImGui::OSImGui::get().Quit();
@@ -125,8 +127,9 @@ private:
 				if (!Init) {
 					// 初始化设置
 					ImGui::GetStyle().WindowRounding = 9;
-					ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = ImVec4(0.13f, 0.15f, 0.19f, 0.5f);
+					ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = ImColor(30, 30, 30, 230);
 					ImGui::SetWindowSize(MenuSize);
+					KpsManager.AddKey({0,1,2,3});
 					Init = true;
 				}
 				if (MapData.Level > 0)
@@ -139,8 +142,8 @@ private:
 				// 滚动字幕
 				ScrollText(MapData.SongName,ImColor(255, 255, 255), { MenuPos.x + 40,MenuPos.y + 20 }, { MenuSize.x - 80,23 }, 23);
 				// 标签
-				RoundingLeble("Kps", "66", ImColor(63, 204, 246), { MenuPos.x + 40,MenuPos.y + 60 }, LebleSize, 18);
-				RoundingLeble("MaxKps", "66", ImColor(63, 204, 246), { MenuPos.x + MenuSize.x - LebleSize.x - 40 ,MenuPos.y + 60 }, LebleSize, 18);
+				RoundingLeble("Kps", std::to_string(KpsManager.GetCurrentKps()), ImColor(63, 204, 246), {MenuPos.x + 40,MenuPos.y + 60}, LebleSize, 18);
+				RoundingLeble("MaxKps", std::to_string(KpsManager.GetMaxKps()), ImColor(63, 204, 246), { MenuPos.x + MenuSize.x - LebleSize.x - 40 ,MenuPos.y + 60 }, LebleSize, 18);
 				RoundingLeble("MM", MM_Value, ImColor(255, 106, 122), {MenuPos.x + 40,MenuPos.y + 90}, LebleSize, 18);
 				// 分割线
 				ImGui::GetForegroundDrawList()->AddLine({ MenuPos.x,MenuPos.y + 130 }, { MenuPos.x + MenuSize.x,MenuPos.y + 130 }, ImColor(60, 60, 60, 245), 2);
@@ -157,6 +160,18 @@ private:
 				OSImGui::OSImGui::get().Text("Miss", { MenuPos.x + 290,MenuPos.y + 140 }, ImColor(151, 151, 151),18);
 				OSImGui::OSImGui::get().Text(std::to_string(Data.Hit.Miss), { MenuPos.x + 305,MenuPos.y + 160 },  ImColor(240, 240, 240), 17, true);
 			}ImGui::End();
+		}
+		else
+		{
+			// 非游玩状态
+			if (KpsManager.GetMaxKps() != 0)
+			{
+				KpsManager.ResetMaxKps();
+			}
+			if (KpsManager.GetCounts() != 0)
+			{
+				KpsManager.ResetCounts();
+			}
 		}
 	}
 };

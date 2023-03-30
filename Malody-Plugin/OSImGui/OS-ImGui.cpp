@@ -175,9 +175,8 @@ namespace OSImGui
         RegisterClassExW(&wc);
         if (Type == ATTACH)
         {
-            Window.hWnd = CreateWindowExW(WS_EX_TOPMOST | WS_EX_LAYERED | WS_EX_TOOLWINDOW, wc.lpszClassName, StringToWstring(Window.Name).c_str(), WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT, 100, 100, NULL, NULL, GetModuleHandle(NULL), NULL);
-            SetLayeredWindowAttributes(Window.hWnd, 0, 1.0f, LWA_ALPHA);
-            SetLayeredWindowAttributes(Window.hWnd, 0, RGB(0, 0, 0), LWA_COLORKEY);
+            Window.hWnd = CreateWindowExW(WS_EX_TOPMOST | WS_EX_TRANSPARENT, wc.lpszClassName, StringToWstring(Window.Name).c_str(), WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT, 100, 100, NULL, NULL, GetModuleHandle(NULL), NULL);
+            SetLayeredWindowAttributes(Window.hWnd, 0, 255, LWA_ALPHA);
         }
         else
         {
@@ -209,7 +208,20 @@ namespace OSImGui
         Window.Pos = DestWindow.Pos = Vec2(static_cast<float>(Point.x), static_cast<float>(Point.y));
         Window.Size = DestWindow.Size = Vec2(static_cast<float>(Rect.right), static_cast<float>(Rect.bottom));
 
-        return SetWindowPos(Window.hWnd, HWND_TOPMOST, Window.Pos.x, Window.Pos.y, Window.Size.x, Window.Size.y, SWP_SHOWWINDOW);
+        SetWindowPos(Window.hWnd, HWND_TOPMOST, Window.Pos.x, Window.Pos.y, Window.Size.x, Window.Size.y, SWP_SHOWWINDOW);
+        
+        // 控制窗口状态切换
+        POINT MousePos;
+        GetCursorPos(&MousePos);
+        ScreenToClient(Window.hWnd, &MousePos);
+        ImGui::GetIO().MousePos.x = MousePos.x;
+        ImGui::GetIO().MousePos.y = MousePos.y;
+
+        if (ImGui::GetIO().WantCaptureMouse)
+            SetWindowLong(Window.hWnd, GWL_EXSTYLE, GetWindowLong(Window.hWnd, GWL_EXSTYLE) & (~WS_EX_LAYERED));
+        else
+            SetWindowLong(Window.hWnd, GWL_EXSTYLE, GetWindowLong(Window.hWnd, GWL_EXSTYLE) | WS_EX_LAYERED);
+        return true;
     }
 
     bool OSImGui_Base::InitImGui()
@@ -218,11 +230,9 @@ namespace OSImGui
         ImGuiIO& io = ImGui::GetIO(); (void)io;
 
         ImGui::StyleColorsDark();
-        io.IniFilename = "Malody-Plugin.ini";
         io.LogFilename = nullptr;
-        io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyhbd.ttc", 20,nullptr,ImGui::GetIO().Fonts->GetGlyphRangesChineseFull());
-        //io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\simhei.ttf", 23, NULL);
-        //ImGui::GetStyle().Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.5f, 0.5f, 0.5f, 0.8f);
+        io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyhbd.ttc", 20, 0, io.Fonts->GetGlyphRangesChineseFull());
+
         if (!ImGui_ImplWin32_Init(Window.hWnd))
             return false;
         if (!ImGui_ImplDX11_Init(Device.g_pd3dDevice, Device.g_pd3dDeviceContext))
@@ -249,6 +259,12 @@ namespace OSImGui
 
         switch (msg)
         {
+        case WM_CREATE:
+            {
+                MARGINS     Margin = { -1 };
+                DwmExtendFrameIntoClientArea(hWnd, &Margin);
+                break;
+            }
         case WM_SIZE:
             if (Device.g_pd3dDevice != NULL && wParam != SIZE_MINIMIZED)
             {
@@ -278,11 +294,11 @@ namespace OSImGui
 // OS-ImGui Draw 绘制功能
 namespace OSImGui
 {
-    void OSImGui::Text(std::string Text, Vec2 Pos, ImColor Color,float FontSize, bool KeepCenter)
+    void OSImGui::Text(std::string Text, Vec2 Pos, ImColor Color, float FontSize, bool KeepCenter)
     {
         if (!KeepCenter)
         {
-            ImGui::GetForegroundDrawList()->AddText(ImGui::GetFont(),FontSize, Pos.ToImVec2(), Color, Text.c_str());
+            ImGui::GetForegroundDrawList()->AddText(ImGui::GetFont(), FontSize, Pos.ToImVec2(), Color, Text.c_str());
         }
         else
         {
@@ -294,7 +310,7 @@ namespace OSImGui
 
     void OSImGui::StrokeText(std::string Text, Vec2 Pos, ImColor Color, float FontSize, bool KeepCenter)
     {
-        this->Text(Text, Vec2(Pos.x - 1, Pos.y + 1), ImColor(0, 0, 0), FontSize,KeepCenter);
+        this->Text(Text, Vec2(Pos.x - 1, Pos.y + 1), ImColor(0, 0, 0), FontSize, KeepCenter);
         this->Text(Text, Vec2(Pos.x - 1, Pos.y - 1), ImColor(0, 0, 0), FontSize, KeepCenter);
         this->Text(Text, Vec2(Pos.x + 1, Pos.y + 1), ImColor(0, 0, 0), FontSize, KeepCenter);
         this->Text(Text, Vec2(Pos.x + 1, Pos.y - 1), ImColor(0, 0, 0), FontSize, KeepCenter);
@@ -324,7 +340,7 @@ namespace OSImGui
         }
         else
         {
-            DrawList->PathArcTo(ImVec2(a.x + Rounding, a.y + Rounding), Rounding, IM_PI, IM_PI / 2 * 3, 15);
+            DrawList->PathArcTo(ImVec2(a.x + Rounding, a.y + Rounding), Rounding, IM_PI, IM_PI / 2 * 3, Nums);
             DrawList->PathArcTo(ImVec2(b.x - Rounding, a.y + Rounding), Rounding, IM_PI / 2 * 3, IM_PI * 2, Nums);
             DrawList->PathArcTo(ImVec2(b.x - Rounding, b.y - Rounding), Rounding, 0, IM_PI / 2, Nums);
             DrawList->PathArcTo(ImVec2(a.x + Rounding, b.y - Rounding), Rounding, IM_PI / 2, IM_PI, Nums);
@@ -378,6 +394,18 @@ namespace OSImGui
             if (i == Points.size() - 2)
                 Line(Points[i + 1], Points[0], Color, Thickness);
         }
+    }
+
+    void OSImGui::Arc(ImVec2 Center, float Radius, ImColor Color, float Thickness, float Angle_begin, float Angle_end, float Nums)
+    {
+        ImDrawList* DrawList = ImGui::GetForegroundDrawList();
+        float angle = (Angle_end - Angle_begin) / Nums;
+        for (int i = 0; i < Nums; i++)
+        {
+            float angle_ = i * angle + Angle_begin - IM_PI / 2;
+            DrawList->PathLineTo({ Center.x - Radius * cos(angle_),Center.y - Radius * sin(angle_) });
+        }
+        DrawList->PathStroke(Color, false, Thickness);
     }
 
     void OSImGui::MyCheckBox(const char* str_id, bool* v)

@@ -4,6 +4,9 @@
 #include <functional>
 #include <codecvt>
 #include <vector>
+#include <dwmapi.h>
+#pragma comment(lib,"dwmapi.lib")
+
 /****************************************************
 * Copyright (C)	: Liv
 * @file			: OS-ImGui.h
@@ -98,6 +101,8 @@ namespace OSImGui
 		void Arc(Vec2 Pos, float Radius, ImColor Color, float Angel, float Proportion, float Thickness);
 		// 连接点
 		void ConnectPoints(std::vector<Vec2> Points, ImColor Color, float Thickness);
+		// 圆弧
+		void Arc(ImVec2 Center, float Radius, ImColor Color, float Thickness, float Aangle_begin, float Angle_end, float Nums = 15);
 		// 勾选框
 		void MyCheckBox(const char* str_id, bool* v);
 		void MyCheckBox2(const char* str_id, bool* v);
