@@ -37,3 +37,5 @@
 *.ini
 /x64/Debug
 /.vs/Malody-Plugin/FileContentIndex
+/Malody-Plugin/x64/Release
+/x64/Release

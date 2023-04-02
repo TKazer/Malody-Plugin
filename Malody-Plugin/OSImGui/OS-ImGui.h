@@ -1,4 +1,5 @@
 #include "OS-ImGui_Struct.h"
+#include "OS-ImGui_Exception.hpp"
 #include <iostream>
 #include <string>
 #include <functional>
@@ -13,7 +14,7 @@
 * @author		: Liv
 * @email		: 1319923129@qq.com
 * @version		: 1.0
-* @date			: 2023/3/26	11:32
+* @date			: 2023/4/2	13:16
 ****************************************************/
 
 namespace OSImGui
@@ -45,7 +46,9 @@ namespace OSImGui
 		HWND  hWnd = NULL;
 		HINSTANCE hInstance;
 		std::string Name;
+		std::wstring wName;
 		std::string ClassName;
+		std::wstring wClassName;
 		Vec2 Pos;
 		Vec2 Size;
 		ImColor BgColor{ 255, 255, 255 };

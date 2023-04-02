@@ -134,6 +134,7 @@
     <ClInclude Include="KeyboardManager\KeyBoard_Base.hpp" />
     <ClInclude Include="KeyboardManager\Kps.hpp" />
     <ClInclude Include="OSImGui\OS-ImGui.h" />
+    <ClInclude Include="OSImGui\OS-ImGui_Exception.hpp" />
     <ClInclude Include="PluginApp.hpp" />
     <ClInclude Include="MalodyReader\MalodyReader.hpp" />
     <ClInclude Include="MalodyReader\Malody_Algorithm.hpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="OSImGui\imgui\imstb_textedit.h" />
     <ClInclude Include="OSImGui\imgui\imstb_truetype.h" />
     <ClInclude Include="OSImGui\OS-ImGui_Struct.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Singleton.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +170,12 @@
     <ClCompile Include="OSImGui\imgui\imgui_tables.cpp" />
     <ClCompile Include="OSImGui\imgui\imgui_widgets.cpp" />
     <ClCompile Include="OSImGui\OS-ImGui.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Malody-Plugin.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="MalodyPluginICON.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

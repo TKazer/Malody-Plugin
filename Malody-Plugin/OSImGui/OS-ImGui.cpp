@@ -7,7 +7,7 @@
 * @author		: Liv
 * @email		: 1319923129@qq.com
 * @version		: 1.0
-* @date			: 2023/3/26	11:32
+* @date			: 2023/4/2	13:16
 ****************************************************/
 
 // D3D11 Device
@@ -74,42 +74,51 @@ namespace OSImGui
 	void OSImGui_Base::NewWindow(std::string WindowName, Vec2 WindowSize, std::function<void()> CallBack)
 	{
 		if (!CallBack)
-			return;
+			throw OSException("CallBack is empty");
 		if (WindowName.empty())
 			Window.Name = "Window";
 
 		Window.Name = WindowName;
+        Window.wName = StringToWstring(Window.Name);
         Window.ClassName = "WindowClass";
+        Window.wClassName = StringToWstring(Window.ClassName);
 		Window.Size = WindowSize;
 
         Type = NEW;
 		CallBackFn = CallBack;
 
         if (!CreateMyWindow())
-            return;
+            throw OSException("CreateMyWindow() call failed");
 
-        if (!InitImGui())
-            return;
-
+        try {
+            InitImGui();
+        }
+        catch (OSException& e)
+        {
+            throw e;
+        }
+ 
         MainLoop();
 	}
 
 	void OSImGui_Base::AttachAnotherWindow(std::string DestWindowName, std::string DestWindowClassName, std::function<void()> CallBack)
 	{
 		if (!CallBack)
-			return;
+            throw OSException("CallBack is empty");
 		if (DestWindowName.empty() && DestWindowClassName.empty())
-			return;
+            throw OSException("DestWindowName and DestWindowClassName are empty");
 
         Window.Name = "Window";
+        Window.wName = StringToWstring(Window.Name);
         Window.ClassName = "WindowClass";
+        Window.wClassName = StringToWstring(Window.ClassName);
         Window.BgColor = ImColor(0, 0, 0, 0);
 
         DestWindow.hWnd = FindWindowA(
             (DestWindowClassName.empty() ? NULL : DestWindowClassName.c_str()),
             (DestWindowName.empty() ? NULL : DestWindowName.c_str()));
         if (DestWindow.hWnd == NULL)
-            return;
+            throw OSException("DestWindow isn't exist");
 		DestWindow.Name = DestWindowName;
 		DestWindow.ClassName = DestWindowClassName;
 
@@ -117,10 +126,15 @@ namespace OSImGui
 		CallBackFn = CallBack;
 
         if (!CreateMyWindow())
-            return;
+            throw OSException("CreateMyWindow() call failed");
 
-        if (!InitImGui())
-            return;
+        try {
+            InitImGui();
+        }
+        catch (OSException& e)
+        {
+            throw e;
+        }
 
         MainLoop();
 	}
@@ -150,7 +164,10 @@ namespace OSImGui
             if (PeekEndMessage())
                 break;
             if (Type == ATTACH)
-                UpdateWindowData();
+            {
+                if (!UpdateWindowData())
+                    break;
+            }
 
             ImGui_ImplDX11_NewFrame();
             ImGui_ImplWin32_NewFrame();
@@ -171,19 +188,18 @@ namespace OSImGui
 
     bool OSImGui_Base::CreateMyWindow()
     {
-        WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, StringToWstring(Window.ClassName).c_str(), NULL};
+        WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, Window.wClassName.c_str(), NULL};
         RegisterClassExW(&wc);
         if (Type == ATTACH)
         {
-            Window.hWnd = CreateWindowExW(WS_EX_TOPMOST | WS_EX_TRANSPARENT, wc.lpszClassName, StringToWstring(Window.Name).c_str(), WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT, 100, 100, NULL, NULL, GetModuleHandle(NULL), NULL);
+            Window.hWnd = CreateWindowExW(WS_EX_TOPMOST | WS_EX_TRANSPARENT, Window.wClassName.c_str(), Window.wName.c_str(), WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT, 100, 100, NULL, NULL, GetModuleHandle(NULL), NULL);
             SetLayeredWindowAttributes(Window.hWnd, 0, 255, LWA_ALPHA);
         }
         else
         {
-            Window.hWnd = CreateWindowW(wc.lpszClassName, StringToWstring(Window.Name).c_str(), WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU, Window.Pos.x, Window.Pos.y, Window.Size.x, Window.Size.y, NULL, NULL, wc.hInstance, NULL);
+            Window.hWnd = CreateWindowW(Window.wClassName.c_str(), Window.wName.c_str(), WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU, Window.Pos.x, Window.Pos.y, Window.Size.x, Window.Size.y, NULL, NULL, wc.hInstance, NULL);
         }
         Window.hInstance = wc.hInstance;
-
 
         if (!Device.CreateDeviceD3D(Window.hWnd))
         {
@@ -202,6 +218,13 @@ namespace OSImGui
     {
         POINT Point{};
         RECT Rect{};
+
+        DestWindow.hWnd = FindWindowA(
+            (DestWindow.ClassName.empty() ? NULL : DestWindow.ClassName.c_str()),
+            (DestWindow.Name.empty() ? NULL : DestWindow.Name.c_str()));
+        if (DestWindow.hWnd == NULL)
+            return false;
+
         GetClientRect(DestWindow.hWnd, &Rect);
         ClientToScreen(DestWindow.hWnd, &Point);
 
@@ -231,12 +254,13 @@ namespace OSImGui
 
         ImGui::StyleColorsDark();
         io.LogFilename = nullptr;
+        io.IniFilename = "Malody-Plugin.ini";
         io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyhbd.ttc", 20, 0, io.Fonts->GetGlyphRangesChineseFull());
 
         if (!ImGui_ImplWin32_Init(Window.hWnd))
-            return false;
+            throw OSException("ImGui_ImplWin32_Init() call failed.");
         if (!ImGui_ImplDX11_Init(Device.g_pd3dDevice, Device.g_pd3dDeviceContext))
-            return false;
+            throw OSException("ImGui_ImplDX11_Init() call failed.");
 
         return true;
     }

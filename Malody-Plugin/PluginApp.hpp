@@ -21,8 +21,18 @@ public:
 		std::cout << "[End] to quit." << std::endl;
 		std::cout << "Running..." << std::endl;
 
-		// 注: 此函数堵塞消息
-		OSImGui::OSImGui::get().AttachAnotherWindow("Malody", "", PluginApp::DataLoop);
+		try {
+			// 注: 此函数堵塞消息
+			OSImGui::OSImGui::get().AttachAnotherWindow("Malody", "", PluginApp::DataLoop);
+		}
+		catch (OSImGui::OSException& e)
+		{
+			std::cout << e.what() << std::endl;
+		}
+		catch (...)
+		{
+			std::cout << "Unkown error" << std::endl;
+		}
 	}
 private:
 	bool WaitingForProgress()

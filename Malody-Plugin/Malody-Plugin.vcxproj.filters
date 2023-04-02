@@ -99,6 +99,10 @@
     <ClInclude Include="KeyboardManager\Kps.hpp">
       <Filter>KeyboardManager</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="OSImGui\OS-ImGui_Exception.hpp">
+      <Filter>OS-ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OSImGui\imgui\imgui.cpp">
@@ -131,5 +135,11 @@
     <ClCompile Include="OSImGui\OS-ImGui.cpp">
       <Filter>OS-ImGui</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Malody-Plugin.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="MalodyPluginICON.ico" />
   </ItemGroup>
 </Project>
