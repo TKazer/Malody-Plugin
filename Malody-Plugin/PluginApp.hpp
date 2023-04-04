@@ -48,30 +48,59 @@ private:
 		}
 		return true;
 	}
+
 	// 滚动字幕
-	static void ScrollText(std::string Text, ImColor Color, Vec2 Pos, Vec2 Size, float FontSize)
+	static void ScrollText(std::string Text, ImColor Color, Vec2 ClipPos, Vec2 Size, float ScrollSpeed, float FontSize,bool Clear=false)
 	{
-		static const float Speed = 20;
-		static std::deque<Vec2> ScrollTextData;
-		ImVec4 ClipRect{ Pos.x,Pos.y,Pos.x + Size.x,Pos.y + Size.y };
+		using ScrollText_ = std::pair<std::string/*Text*/, std::deque<Vec2>/*Text position deque*/>;
+		static std::deque<ScrollText_> ScrollTextDeque;
+		if (Clear)
+		{
+			if (ScrollTextDeque.size() > 0)
+				ScrollTextDeque.clear();
+			return;
+		}
+
+		ImVec4 ClipRect{ ClipPos.x,ClipPos.y,ClipPos.x + Size.x,ClipPos.y + Size.y };
 		float TextWidth = ImGui::GetFont()->CalcTextSizeA(FontSize, FLT_MAX, 0.f, Text.c_str()).x;
-		if (ScrollTextData.size() == 0)
+		
+		auto SingleScrollText = std::find_if(ScrollTextDeque.begin(), ScrollTextDeque.end(),
+			[=](ScrollText_ _t)
+			{
+				return _t.first == Text;
+			});
+		if (SingleScrollText == ScrollTextDeque.end())
 		{
-			ScrollTextData.push_back({ 0,0 });
+			// 若没有此文本的队列，则插入一个新文本队列
+			ScrollTextDeque.push_back(std::make_pair(Text, std::deque<Vec2>()));
+			SingleScrollText = ScrollTextDeque.end() - 1;
+			SingleScrollText->second.push_back({ Size.x,0 });
 		}
-		if (ScrollTextData[0].x + TextWidth < (Size.x / 4 * 3)
-			&& ScrollTextData.size() < 2)
+
+		if (SingleScrollText != ScrollTextDeque.end())
 		{
-			ScrollTextData.push_back({ Size.x,0 });
-		}
-		if (ScrollTextData[0].x < -TextWidth)
-		{
-			ScrollTextData.pop_front();
-		}
-		for (auto& ScrollText : ScrollTextData)
-		{
-			ImGui::GetForegroundDrawList()->AddText(ImGui::GetFont(), FontSize, { ScrollText.x + Pos.x,ScrollText.y + Pos.y }, Color, Text.c_str(), nullptr, NULL, &ClipRect);
-			ScrollText.x -= ImGui::GetIO().DeltaTime * Speed;
+			std::deque<Vec2>& ScrollTextVecDeque = SingleScrollText->second;
+			for (int i = 0; i < ScrollTextVecDeque.size(); i++)
+			{
+				// 弹出超出范围的文字
+				if (ScrollTextVecDeque.at(i).x < -TextWidth)
+				{
+					ScrollTextVecDeque.pop_front();
+				}
+				if (ScrollTextVecDeque.size() > 0)
+				{
+					// 若最后一项文字尾部坐标小于限制框的宽度的3/4，则向后加文字
+					if (ScrollTextVecDeque.at(i).x + TextWidth < (Size.x / 4 * 3))
+					{
+						if (i == ScrollTextVecDeque.size() - 1)
+						{
+							ScrollTextVecDeque.push_back({ Size.x,0 });
+						}
+					}
+					ScrollTextVecDeque.at(i).x -= ImGui::GetIO().DeltaTime * ScrollSpeed;
+					ImGui::GetForegroundDrawList()->AddText(ImGui::GetFont(), FontSize, { ScrollTextVecDeque.at(i).x + ClipPos.x,ScrollTextVecDeque.at(i).y + ClipPos.y }, Color, Text.c_str(), nullptr, NULL, &ClipRect);
+				}
+			}
 		}
 	}
 
@@ -150,7 +179,7 @@ private:
 					MM_Value = Buffer;
 				}
 				// 滚动字幕
-				ScrollText(MapData.SongName,ImColor(255, 255, 255), { MenuPos.x + 40,MenuPos.y + 20 }, { MenuSize.x - 80,23 }, 23);
+				ScrollText(MapData.SongName, ImColor(255, 255, 255), { MenuPos.x + 40,MenuPos.y + 20 }, { MenuSize.x - 80,23 }, 30, 23);
 				// 标签
 				RoundingLeble("Kps", std::to_string(KpsManager.GetCurrentKps()), ImColor(63, 204, 246), {MenuPos.x + 40,MenuPos.y + 60}, LebleSize, 18);
 				RoundingLeble("MaxKps", std::to_string(KpsManager.GetMaxKps()), ImColor(63, 204, 246), { MenuPos.x + MenuSize.x - LebleSize.x - 40 ,MenuPos.y + 60 }, LebleSize, 18);
@@ -174,6 +203,9 @@ private:
 		else
 		{
 			// 非游玩状态
+			// Clear the scroll text deque.
+			ScrollText("", {}, {}, {}, 0, 0, true);
+			// Reset
 			if (KpsManager.GetMaxKps() != 0)
 			{
 				KpsManager.ResetMaxKps();
